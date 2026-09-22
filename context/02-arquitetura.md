@@ -1,5 +1,7 @@
 # Contexto: Arquitetura
 
+> Diagramas completos (Mermaid): ver [`docs/ARQUITETURA.md`](../docs/ARQUITETURA.md)
+
 ## Camadas
 ```
 FRONT (Next.js + React + Tailwind + Leaflet)
@@ -8,6 +10,14 @@ API (Next.js API Routes + Services)
   ↓ Prisma ORM
 DB (SQLite dev / PostgreSQL prod)
 ```
+
+## Diagramas disponíveis
+- Arquitetura em camadas (FRONT → API → DB)
+- Componentes e integração da API
+- Fluxos: reserva, assinatura, autenticação, matchmaking
+- Ciclo de vida da fornada (state diagram)
+- Ecossistema de agentes IA
+- Modelo entidade-relacionamento (ER)
 
 ## Princípios
 - Monolito modular com separação clara de responsabilidades
