@@ -1,0 +1,30 @@
+---
+description: Schema Prisma e regras de banco de dados
+globs: prisma/**/*
+alwaysApply: false
+---
+
+# Prisma / Database
+
+## Status como strings (SQLite não suporta enums)
+- Fornada: `SCHEDULED` → `BAKING` → `READY` → `SOLD_OUT`
+- Reserva: `PENDING` → `CONFIRMED` → `CANCELLED` → `DELIVERED`
+- Assinatura: `ACTIVE` | `PAUSED` | `CANCELLED`
+- Pagamento: `PENDING` | `APPROVED` | `FAILED` | `REFUNDED`
+
+## Regras de negócio no banco
+- Reserva confirmada só após pagamento `APPROVED`
+- Decrementar `BakeSchedule.available` atomicamente na reserva
+- `available === 0` → status `SOLD_OUT`
+- Cashback assinatura: 5% via `calculateCashback()` em `@/lib/payment`
+
+## Comandos
+```bash
+npm run db:push    # sync schema
+npm run db:seed    # dados demo
+npm run db:setup   # push + seed
+```
+
+## Seed demo
+- Consumidor: `maria@email.com` / `123456`
+- Admin: `joao@padaria.com` / `123456`

@@ -1,0 +1,36 @@
+---
+description: Padrões React/Next.js para páginas e componentes
+globs: src/**/*.tsx
+alwaysApply: false
+---
+
+# Frontend
+
+## Padrões
+- `"use client"` apenas quando necessário (state, effects, browser APIs)
+- Chamadas API via `api` de `@/lib/api-client.ts` — nunca fetch direto espalhado
+- Token JWT em `localStorage` (`token`, `user`)
+- Componentes reutilizáveis em `src/components/`
+- Tailwind com palette `bread-*` (cor principal do projeto)
+- Textos da UI em português
+
+## Mapa (Leaflet)
+- Import dinâmico com `dynamic()` e `ssr: false`
+- CSS do Leaflet importado em `globals.css`
+- Geolocalização via `navigator.geolocation`
+
+## Páginas principais
+| Rota | Público |
+|------|---------|
+| `/mapa` | Consumidor |
+| `/cronograma` | Todos |
+| `/reservas`, `/assinaturas` | Consumidor autenticado |
+| `/dashboard` | ADM / Operador |
+
+## Exemplo de chamada API
+
+```typescript
+const { token, user } = await api.login(email, password);
+localStorage.setItem("token", token);
+localStorage.setItem("user", JSON.stringify(user));
+```

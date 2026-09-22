@@ -1,0 +1,39 @@
+---
+description: Padrões para API Routes do Next.js
+globs: src/app/api/**/*.ts
+alwaysApply: false
+---
+
+# API Routes
+
+## Estrutura padrão
+
+```typescript
+import { NextRequest, NextResponse } from "next/server";
+import { prisma } from "@/lib/db";
+import { requireAuth, requireRole } from "@/lib/auth";
+
+export async function POST(req: NextRequest) {
+  const user = requireAuth(req);
+  if (!user) return NextResponse.json({ error: "Não autorizado" }, { status: 401 });
+  if (!requireRole(user, ["CONSUMER"])) {
+    return NextResponse.json({ error: "Permissão negada" }, { status: 403 });
+  }
+
+  try {
+    const body = await req.json();
+    // validação → prisma → resposta
+    return NextResponse.json(result, { status: 201 });
+  } catch {
+    return NextResponse.json({ error: "Erro interno" }, { status: 500 });
+  }
+}
+```
+
+## Regras
+- Auth via `requireAuth(req)` + `requireRole(user, roles[])`
+- Lógica de negócio complexa vai em `src/services/`, não na route
+- Transações atômicas com `prisma.$transaction()` para reservas/pagamentos
+- Pagamentos via `processPayment()` de `@/lib/payment` (mock gateway)
+- Includes Prisma explícitos para dados relacionados (product, establishment)
+- Agentes IA expostos em `/api/agents/*` delegam para `src/services/agents/`

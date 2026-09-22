@@ -1,0 +1,38 @@
+---
+description: Padrões para agentes de IA do Paozinho Quente
+globs: src/services/agents/**/*
+alwaysApply: false
+---
+
+# Agentes de IA
+
+## Interface obrigatória
+
+```typescript
+export class MeuAgente implements Agent<TInput, TOutput> {
+  type = "DEMAND_PREDICTION" as const;
+
+  async execute(input: TInput): Promise<TOutput> {
+    // lógica determinística
+    const output = { /* ... */ };
+    await logAgentRun(this.type, input, output);
+    return output;
+  }
+}
+```
+
+## Agentes existentes
+| Agente | Arquivo | Endpoint |
+|--------|---------|----------|
+| PCP Demanda | `demand-prediction.ts` | POST `/api/agents/demand-prediction` |
+| Matchmaking | `matchmaking.ts` | POST `/api/agents/matchmaking` |
+| Rotas | `route-optimization.ts` | POST `/api/agents/route-optimization` |
+| Retenção | `retention-upsell.ts` | POST `/api/agents/retention` |
+
+## Regras
+- Sempre registrar execução com `logAgentRun()` → tabela `AgentLog`
+- Matchmaking usa `haversineDistance()` de `@/lib/geo`
+- Score matchmaking: status×0.5 + distância×0.3 + estoque×0.2
+- Rotas: algoritmo nearest-neighbor a partir da padaria
+- PCP: média móvel + peso por dia da semana
+- Extensível para LLM — manter interface `Agent<TInput, TOutput>`

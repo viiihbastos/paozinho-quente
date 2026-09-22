@@ -1,0 +1,29 @@
+---
+description: Metodologia AI-Driven Development — usar context files antes de codar
+globs: context/**/*,docs/**/*
+alwaysApply: false
+---
+
+# AI-Driven Development
+
+Antes de implementar features, consultar e manter sincronizados:
+
+| Arquivo | Conteúdo |
+|---------|----------|
+| `context/01-produto.md` | Problema, funcionalidades, diferenciais |
+| `context/02-arquitetura.md` | Camadas FRONT→API→DB |
+| `context/03-dominio.md` | Entidades e regras de negócio |
+| `context/04-agentes-ia.md` | Especificação dos 4 agentes |
+| `context/05-regras-negocio.md` | Permissões e fluxos |
+| `docs/ARQUITETURA.md` | Diagramas Mermaid completos |
+
+## Ao adicionar features
+1. Atualizar context file relevante
+2. Atualizar diagrama em `docs/ARQUITETURA.md` se fluxo mudar
+3. Implementar seguindo camadas existentes
+4. Manter agentes com interface `Agent<TInput, TOutput>`
+
+## Entregáveis do curso
+- Documento de arquitetura ✅
+- Repositório com `context/` ✅
+- Implementação FRONT → API → DB ✅

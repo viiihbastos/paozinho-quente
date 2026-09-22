@@ -62,9 +62,25 @@ Acesse [http://localhost:3000](http://localhost:3000)
 | Admin Padaria | joao@padaria.com | 123456 |
 | Operador | operador@padaria.com | 123456 |
 
+## Cursor Rules (AI-Driven Development)
+
+Regras persistentes para o agente do Cursor em `.cursor/rules/`:
+
+| Rule | Escopo |
+|------|--------|
+| `project.mdc` | Sempre ativa — visão geral e convenções |
+| `api-routes.mdc` | `src/app/api/**` |
+| `agents-ia.mdc` | `src/services/agents/**` |
+| `frontend.mdc` | `src/**/*.tsx` |
+| `prisma-database.mdc` | `prisma/**` |
+| `ai-driven-dev.mdc` | `context/`, `docs/` |
+
+Ver também [`AGENTS.md`](AGENTS.md) para guia completo de agentes IA.
+
 ## Estrutura do Projeto
 
 ```
+├── .cursor/rules/     # Cursor rules (AI-Driven Development)
 ├── context/           # Arquivos de contexto (AI-Driven Development)
 ├── docs/              # Documentação de arquitetura
 ├── prisma/            # Schema e seed do banco

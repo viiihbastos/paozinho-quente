@@ -1,0 +1,36 @@
+---
+description: Visão geral do projeto Paozinho Quente — stack, domínio e convenções
+alwaysApply: true
+---
+
+# Paozinho Quente — Projeto
+
+Sistema de localização de paozinho quente: conecta consumidores a padarias no momento em que o pão sai do forno.
+
+## Stack
+- **Frontend:** Next.js 14 App Router, React 18, Tailwind CSS, Leaflet
+- **Backend:** Next.js API Routes, TypeScript
+- **DB:** SQLite (dev) via Prisma ORM
+- **Auth:** JWT + bcryptjs
+
+## Arquitetura
+```
+FRONT → API → DB
+         └── Agentes IA (services/)
+```
+
+## Roles
+- `CONSUMER` — mapa, cronograma, reservas, assinaturas
+- `ESTABLISHMENT_ADMIN` — CRUD padaria, fornadas, agentes
+- `ESTABLISHMENT_OPERATOR` — fornadas, entregas, agentes
+
+## Documentação obrigatória antes de implementar
+1. `context/` — arquivos de contexto AI-Driven Development
+2. `docs/ARQUITETURA.md` — diagramas e decisões arquiteturais
+
+## Convenções gerais
+- Respostas de erro em português: `{ error: "mensagem" }`
+- Status HTTP: 401 (não auth), 403 (sem permissão), 404, 409, 402 (pagamento)
+- Paths com alias `@/` → `src/`
+- Manter escopo mínimo; reutilizar `lib/` e `services/`
+- Não commitar `.env`, `*.db`, `node_modules/`
