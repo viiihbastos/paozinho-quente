@@ -1,0 +1,134 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  name         String
+  role         String   @default("CONSUMER")
+  address      String?
+  lat          Float?
+  lng          Float?
+  createdAt    DateTime @default(now())
+
+  establishments Establishment[] @relation("AdminEstablishments")
+  reservations   Reservation[]
+  subscriptions  Subscription[]
+}
+
+model Establishment {
+  id          String   @id @default(cuid())
+  name        String
+  address     String
+  lat         Float
+  lng         Float
+  phone       String?
+  adminUserId String
+  createdAt   DateTime @default(now())
+
+  admin          User            @relation("AdminEstablishments", fields: [adminUserId], references: [id])
+  products       Product[]
+  bakeSchedules  BakeSchedule[]
+  subscriptions  Subscription[]
+  deliveryRoutes DeliveryRoute[]
+}
+
+model Product {
+  id              String @id @default(cuid())
+  establishmentId String
+  name            String
+  price           Float
+  category        String @default("pao")
+
+  establishment Establishment @relation(fields: [establishmentId], references: [id])
+  bakeSchedules BakeSchedule[]
+}
+
+model BakeSchedule {
+  id              String   @id @default(cuid())
+  establishmentId String
+  productId       String
+  scheduledAt     DateTime
+  readyAt         DateTime?
+  quantity        Int
+  available       Int
+  status          String   @default("SCHEDULED")
+  createdAt       DateTime @default(now())
+
+  establishment Establishment @relation(fields: [establishmentId], references: [id])
+  product       Product       @relation(fields: [productId], references: [id])
+  reservations  Reservation[]
+}
+
+model Reservation {
+  id             String   @id @default(cuid())
+  userId         String
+  bakeScheduleId String
+  quantity       Int
+  totalPrice     Float
+  status         String   @default("PENDING")
+  paymentId      String?  @unique
+  createdAt      DateTime @default(now())
+
+  user         User         @relation(fields: [userId], references: [id])
+  bakeSchedule BakeSchedule @relation(fields: [bakeScheduleId], references: [id])
+  payment      Payment?     @relation(fields: [paymentId], references: [id])
+}
+
+model Subscription {
+  id              String   @id @default(cuid())
+  userId          String
+  establishmentId String
+  planName        String
+  price           Float
+  frequency       String   @default("daily")
+  status          String   @default("ACTIVE")
+  cashbackBalance Float    @default(0)
+  createdAt       DateTime @default(now())
+
+  user          User          @relation(fields: [userId], references: [id])
+  establishment Establishment @relation(fields: [establishmentId], references: [id])
+  payments      Payment[]
+}
+
+model Payment {
+  id             String   @id @default(cuid())
+  amount         Float
+  method         String   @default("card")
+  status         String   @default("PENDING")
+  type           String
+  externalId     String?
+  subscriptionId String?
+  createdAt      DateTime @default(now())
+
+  reservation  Reservation?
+  subscription Subscription? @relation(fields: [subscriptionId], references: [id])
+}
+
+model DeliveryRoute {
+  id               String   @id @default(cuid())
+  establishmentId  String
+  date             DateTime
+  stops            String
+  totalDistance    Float
+  estimatedMinutes Int
+  status           String   @default("planned")
+  createdAt        DateTime @default(now())
+
+  establishment Establishment @relation(fields: [establishmentId], references: [id])
+}
+
+model AgentLog {
+  id        String   @id @default(cuid())
+  agentType String
+  input     String
+  output    String
+  createdAt DateTime @default(now())
+}
